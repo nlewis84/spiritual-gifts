@@ -1,5 +1,6 @@
 import { Form, useSubmit } from "@remix-run/react";
 import React, { useState } from "react";
+import QuestionOption from "./QuestionOption";
 
 type Question = {
   id: number;
@@ -12,12 +13,12 @@ type Props = {
 
 export default function QuestionForm({ questions }: Props) {
   const submit = useSubmit();
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(
-    {}
-  );
-  const [answeredQuestions, setAnsweredQuestions] = useState<Record<string, boolean>>(
-    {}
-  );
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >({});
+  const [answeredQuestions, setAnsweredQuestions] = useState<
+    Record<string, boolean>
+  >({});
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -57,46 +58,37 @@ export default function QuestionForm({ questions }: Props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="pt-2 space-y-4">
-      {questions.map((question) => (
-        <div
-          key={question.id}
-          className={`border bg-white p-4 rounded-md shadow-md ${
-            answeredQuestions[`question_${question.id}`]
-              ? "opacity-60"
-              : "opacity-100"
-          }`}
-        >
-          <p className="text-xl font-semibold mb-1">{question.text}</p>
-          <div className="flex space-x-2">
-            {[1, 2, 3, 4, 5].map((optionValue) => (
-              <label
-                key={`question_${question.id}_${optionValue}`}
-                htmlFor={`question_${question.id}_${optionValue}`}
-                className={`p-2 rounded-lg cursor-pointer transition-colors ${
-                  selectedOptions[`question_${question.id}`] ===
-                  optionValue.toString()
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-blue-600 hover:bg-blue-100"
-                }`}
-              >
-                <input
-                  type="radio"
-                  id={`question_${question.id}_${optionValue}`}
-                  name={`question_${question.id}`}
-                  value={optionValue}
+    <Form onSubmit={handleSubmit} className="space-y-4 pt-2">
+      {questions.map((question) => {
+        const groupName = `question_${question.id}`;
+        const selectedOption = selectedOptions[groupName] || "";
+        const isAnswered = !!answeredQuestions[groupName];
+
+        return (
+          <div
+            key={question.id}
+            className={`rounded-md border bg-white p-4 shadow-md ${
+              isAnswered ? "opacity-60" : "opacity-100"
+            }`}
+          >
+            <p className="mb-1 text-xl font-semibold">{question.text}</p>
+            <div className="flex space-x-2">
+              {[1, 2, 3, 4, 5].map((optionValue) => (
+                <QuestionOption
+                  key={`question_${question.id}_${optionValue}`}
+                  optionValue={optionValue}
+                  isSelected={selectedOption === optionValue.toString()}
                   onChange={handleRadioChange}
-                  className="sr-only"
+                  groupName={groupName}
                 />
-                {optionValue}
-              </label>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700"
+        className="w-full rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700"
       >
         Submit
       </button>

@@ -64,33 +64,33 @@ export default function Index() {
         </div>
         <ol className="mb-6 list-inside rounded-lg bg-blue-100 p-4 text-left text-blue-600">
           <li className="mb-4">
-            <div className="inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
+            <div className="mr-2 inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
               1
             </div>{" "}
             Not at all characteristic of me. Definitely untrue for me
           </li>
           <li className="mb-4">
-            <div className="inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
+            <div className="mr-2 inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
               2
             </div>{" "}
             Occasionally characteristic of me. True for me–about 25 percent of
             the time
           </li>
           <li className="mb-4">
-            <div className="inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
+            <div className="mr-2 inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
               3
             </div>{" "}
             Frequently characteristic of me. True for me–about 50 percent of the
             time
           </li>
           <li className="mb-4">
-            <div className="inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
+            <div className="mr-2 inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
               4
             </div>{" "}
             Most of the time this would describe me or be true for me
           </li>
           <li className="mb-4">
-            <div className="inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
+            <div className="mr-2 inline-block h-8 w-8 rounded-full bg-blue-700 text-center text-base font-bold leading-8 text-white">
               5
             </div>{" "}
             Highly characteristic of me. Definitely true for me
@@ -101,9 +101,7 @@ export default function Index() {
         </div>
         <ul className="mb-6 list-inside list-disc rounded-lg bg-blue-100 p-4 text-left">
           <li className="mb-2 text-blue-600">
-            Select the one response you feel best characterizes yourself and
-            place that number in the blank provided. Record your answer in the
-            blank beside each item.
+            Select the number you feel best characterizes yourself.
           </li>
           <li className="mb-2 text-blue-600">
             Do not spend too much time on any one item. Remember, it is not a
