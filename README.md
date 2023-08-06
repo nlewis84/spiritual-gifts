@@ -62,6 +62,20 @@ Click this button to create a [Gitpod](https://gitpod.io) workspace with the pro
 
 This starts your app in development mode, rebuilding assets on file changes.
 
+## Database Changes
+
+- Make changes to the schema in `prisma/schema.prisma` then run `npx prisma migrate dev` from the root
+
+- Run these commands to catch your local DB up with the new migrations and
+
+  ```sh
+  yarn setup
+  yarn build
+  yarn dev
+  ```
+
+## Other
+
 The database seed script creates a new user with some data you can use to get started:
 
 - Email: `rachel@remix.run`

@@ -15,7 +15,6 @@ model User {
 
   password Password?
 
-  notes    Note[]
   profiles Profile[]
   Answer   Answer[]
 }
@@ -27,21 +26,13 @@ model Password {
   userId String @unique
 }
 
-model Note {
-  id        String   @id @default(cuid())
-  title     String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
-}
-
 model Question {
-  id     String   @id @default(cuid())
-  text   String
-  Answer Answer[]
+  id             String   @id @default(cuid())
+  text           String
+  giftId         String?  @default("") // Set a default value for giftId
+  questionNumber Int?     @default(0) // Set a default value for questionNumber
+  gift           Gift?    @relation(fields: [giftId], references: [id])
+  Answer         Answer[]
 }
 
 model Answer {
@@ -57,9 +48,10 @@ model Answer {
 }
 
 model Gift {
-  id      String    @id @default(cuid())
-  name    String
-  Profile Profile[]
+  id        String     @id @default(cuid())
+  name      String
+  Profile   Profile[]
+  questions Question[]
 }
 
 model Profile {
