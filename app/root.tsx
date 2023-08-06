@@ -11,8 +11,11 @@ import {
 } from "@remix-run/react";
 
 import { getUser } from "~/session.server";
-import { getGifts } from "~/models/gift.server";
 import { getQuestions, getQuestionById } from "~/models/question.server";
+import {
+  saveProfileDataToUser,
+  saveProfileDataWithoutUser,
+} from "~/models/profile.server";
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -33,8 +36,10 @@ const calculateGiftTotals = async (formData) => {
       const giftName = questionData.gift.name;
 
       // Convert gift name to camelCase
-      const giftNameInCamelCase =
-        giftName.charAt(0).toLowerCase() + giftName.slice(1);
+      const giftNameInCamelCase = giftName
+        .toLowerCase()
+        .replace(/\/(.?)/g, (match, chr) => chr.toUpperCase());
+
       giftTotals[giftNameInCamelCase] =
         (giftTotals[giftNameInCamelCase] || 0) + answer;
     }
@@ -45,6 +50,7 @@ const calculateGiftTotals = async (formData) => {
 
 export async function action({ request }) {
   const body = await request.formData();
+  const user = await getUser(request);
 
   const formData = {};
   for (const entry of body.entries()) {
@@ -53,6 +59,12 @@ export async function action({ request }) {
 
   const giftTotals = await calculateGiftTotals(formData);
   console.log("Gift totals:", giftTotals);
+  // Save the profile data based on user login status
+  if (user) {
+    await saveProfileDataToUser(user.id, giftTotals);
+  } else {
+    await saveProfileDataWithoutUser(giftTotals);
+  }
 
   return redirect("/results");
 }

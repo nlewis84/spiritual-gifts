@@ -22,7 +22,7 @@ const questions: {
   { text: "I am able to sense the true motivation of persons and movements.", questionNumber: 11, gift: "Discernment" },
   { text: "I have a special ability to trust God in difficult situations.", questionNumber: 12, gift: "Faith" },
   { text: "I have a strong desire to contribute to the establishment of new churches.", questionNumber: 13, gift: "Apostleship" },
-  { text: "I take action to meet physical and practical needs rather than merely talking about or planning how to help.", questionNumber: 14, gift: "Service/Helps" },
+  { text: "I take action to meet physical and practical needs rather than merely talking about or planning how to help.", questionNumber: 14, gift: "Service" },
   { text: "I enjoy entertaining guests in my home.", questionNumber: 15, gift: "Hospitality" },
   { text: "I can adapt my guidance to fit the maturity of those working with me.", questionNumber: 16, gift: "Leadership" },
   { text: "I can delegate and assign meaningful work.", questionNumber: 17, gift: "Administration" },
@@ -38,7 +38,7 @@ const questions: {
   { text: "I am a person of vision (a clear mental portrait of a preferable future given by God). I am able to communicate vision in such a way that others commit to making the vision a reality.", questionNumber: 27, gift: "Leadership" },
   { text: "I am willing to yield to God’s will rather than question and waver.", questionNumber: 28, gift: "Faith" },
   { text: "I would like to be more active in getting the gospel to people in other countries.", questionNumber: 29, gift: "Apostleship" },
-  { text: "It makes me happy to do things for people in need.", questionNumber: 30, gift: "Service/Helps" },
+  { text: "It makes me happy to do things for people in need.", questionNumber: 30, gift: "Service" },
   { text: "I am successful in getting a group to do its work joyfully.", questionNumber: 31, gift: "Hospitality" },
   { text: "I am able to make strangers feel at ease.", questionNumber: 32, gift: "Evangelism" },
   { text: "I have the ability to teach to a variety of different learning styles.", questionNumber: 33, gift: "Teaching" },
@@ -80,11 +80,11 @@ const questions: {
   { text: "God gives me messages to deliver to His people.", questionNumber: 69, gift: "Prophecy" },
   { text: "I am able to sense whether people are being honest when they tell of their religious experiences.", questionNumber: 70, gift: "Discernment" },
   { text: "I enjoy presenting the gospel to persons of other cultures and backgrounds.", questionNumber: 71, gift: "Evangelism" },
-  { text: "I enjoy doing little things that help people.", questionNumber: 72, gift: "Service/Helps" },
+  { text: "I enjoy doing little things that help people.", questionNumber: 72, gift: "Service" },
   { text: "I can give a clear, uncomplicated presentation of the gospel.", questionNumber: 73, gift: "Evangelism" },
   { text: "I have been able to apply biblical truth to the specific needs of my church.", questionNumber: 74, gift: "Teaching" },
   { text: "God has used me to encourage others to live Christlike lives.", questionNumber: 75, gift: "Exhortation" },
-  { text: "I have sensed the need to help other people become more effective in their ministries.", questionNumber: 76, gift: "Service/Helps" },
+  { text: "I have sensed the need to help other people become more effective in their ministries.", questionNumber: 76, gift: "Service" },
   { text: "I like to talk about Jesus to those who do not know Him.", questionNumber: 77, gift: "Evangelism" },
   { text: "I have the ability to make strangers feel comfortable in my home.", questionNumber: 78, gift: "Hospitality" },
   { text: "I have a wide range of study resources and know how to secure information.", questionNumber: 79, gift: "Knowledge" },
@@ -106,7 +106,7 @@ const questions: {
     { name: "Faith" },
     { name: "Evangelism" },
     { name: "Apostleship" },
-    { name: "Service/Helps" },
+    { name: "Service" },
     { name: "Mercy" },
     { name: "Giving" },
     { name: "Hospitality" },
@@ -115,13 +115,14 @@ const questions: {
   async function seed() {
     const email = "rachel@remix.run";
   
-    // cleanup the existing database
-    await prisma.user.delete({ where: { email } }).catch(() => {
-      // no worries if it doesn't exist yet
-    });
-  
+    // Check if the user already exists, if not, create the user
+  let existingUser = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!existingUser) {
     const hashedPassword = await bcrypt.hash("racheliscool", 10);
-  
+
     await prisma.user.create({
       data: {
         email,
@@ -132,25 +133,39 @@ const questions: {
         },
       },
     });
-
-      // Seed the Gift table
-  for (const gift of gifts) {
-    await prisma.gift.create({
-      data: gift,
-    });
-    console.log(`Gift "${gift.name}" seeded.`);
+    console.log("User seeded.");
   }
 
-  
-    // Create the Question records and link to the corresponding gift
-    for (const { text, questionNumber, gift } of questions) {
-      const selectedGift = await prisma.gift.findFirst({
-        where: { name: gift },
+  // Seed the Gift table
+  for (const gift of gifts) {
+    // Check if the gift already exists before creating it
+    const existingGift = await prisma.gift.findFirst({
+      where: { name: gift.name },
+    });
+
+    if (!existingGift) {
+      await prisma.gift.create({
+        data: gift,
       });
-      if (!selectedGift) {
-        throw new Error(`Gift with name "${gift}" not found.`);
-      }
-  
+      console.log(`Gift "${gift.name}" seeded.`);
+    }
+  }
+
+  // Create the Question records and link to the corresponding gift
+  for (const { text, questionNumber, gift } of questions) {
+    const selectedGift = await prisma.gift.findFirst({
+      where: { name: gift },
+    });
+
+    if (!selectedGift) {
+      throw new Error(`Gift with name "${gift}" not found.`);
+    }
+
+    const existingQuestion = await prisma.question.findFirst({
+      where: { text },
+    });
+
+    if (!existingQuestion) {
       const createdQuestion = await prisma.question.create({
         data: {
           text,
@@ -162,9 +177,10 @@ const questions: {
       });
       console.log(`Created question ${createdQuestion.id} with number ${questionNumber}`);
     }
-  
-    console.log(`Database has been seeded. 🌱`);
   }
+
+  console.log(`Database has been seeded. 🌱`);
+}
   
   seed()
     .catch((e) => {

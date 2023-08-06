@@ -53,7 +53,6 @@ model Answer {
 model Gift {
   id        String     @id @default(cuid())
   name      String
-  Profile   Profile[]
   questions Question[]
 }
 
@@ -79,12 +78,10 @@ model Profile {
   faith          Int?
   evangelism     Int?
   apostleship    Int?
-  serviceHelps   Int?
+  service        Int?
   mercy          Int?
   giving         Int?
   hospitality    Int?
 
   answers Answer[]
-  Gift    Gift?    @relation(fields: [giftId], references: [id])
-  giftId  String?
 }
