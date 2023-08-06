@@ -11,6 +11,7 @@ import {
 } from "@remix-run/react";
 
 import { getUser } from "~/session.server";
+import { getQuestions } from '~/models/question.server';
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -19,7 +20,13 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderArgs) => {
-  return json({ user: await getUser(request) });
+  const questions = await getQuestions();
+  const user = await getUser(request);
+
+  return json({ 
+    questions,
+    user,
+   });
 };
 
 export default function App() {

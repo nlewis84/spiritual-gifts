@@ -88,10 +88,18 @@ export async function createUserSession({
 }
 
 export async function logout(request: Request) {
+  console.log("Logout function called"); // Debugging statement
+
   const session = await getSession(request);
-  return redirect("/", {
+  console.log("Session before logout:", session); // Debugging statement
+
+  const redirectResponse = redirect("/", {
     headers: {
       "Set-Cookie": await sessionStorage.destroySession(session),
     },
   });
+
+  console.log("Redirect response:", redirectResponse); // Debugging statement
+
+  return redirectResponse;
 }
