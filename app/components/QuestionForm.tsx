@@ -1,5 +1,5 @@
 import { Form, useSubmit } from "@remix-run/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuestionOption from "./QuestionOption";
 
 type Question = {
@@ -57,17 +57,49 @@ export default function QuestionForm({ questions }: Props) {
     }));
   };
 
+  // TODO: Remove this after done testing
+  const setAllTo5 = () => {
+    const updatedSelectedOptions: Record<string, string> = {};
+    for (const question of questions) {
+      updatedSelectedOptions[`question_${question.id}`] = "5";
+    }
+    setSelectedOptions(updatedSelectedOptions);
+  };
+
+  // Initialize answeredQuestions state for each question
+  useEffect(() => {
+    const initialAnsweredQuestions: Record<string, boolean> = {};
+    questions.forEach((question) => {
+      initialAnsweredQuestions[`question_${question.id}`] = false;
+    });
+    setAnsweredQuestions(initialAnsweredQuestions);
+  }, [questions]);
+
+  // Function to check if a question has been answered
+  const checkIsAnswered = (groupName: string): boolean => {
+    return selectedOptions[groupName] !== undefined;
+  };
+
   return (
     <Form onSubmit={handleSubmit} className="space-y-4 pt-2">
+      {/* TODO: Remove this after done testing */}
+      <button
+        type="button"
+        className="w-full rounded-md bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-700"
+        onClick={setAllTo5}
+      >
+        Set All to 5
+      </button>
       {questions.map((question) => {
         const groupName = `question_${question.id}`;
         const selectedOption = selectedOptions[groupName] || "";
-        const isAnswered = !!answeredQuestions[groupName];
+        const isAnswered = checkIsAnswered(groupName);
 
+        console.log(isAnswered);
         return (
           <div
             key={question.id}
-            className={`rounded-md border bg-white p-4 shadow-md ${
+            className={`rounded-md border bg-white p-4 shadow-md transition-opacity duration-500 ${
               isAnswered ? "opacity-60" : "opacity-100"
             }`}
           >
