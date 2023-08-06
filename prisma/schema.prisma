@@ -59,7 +59,6 @@ model Gift {
 
 model Profile {
   id        String   @id @default(cuid())
-  total     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -67,7 +66,25 @@ model Profile {
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String?
 
-  gift    Gift     @relation(fields: [giftId], references: [id])
-  giftId  String
+  // Gift ratings for each gift as separate columns
+  leadership     Int?
+  administration Int?
+  teaching       Int?
+  knowledge      Int?
+  wisdom         Int?
+  prophecy       Int?
+  discernment    Int?
+  exhortation    Int?
+  shepherding    Int?
+  faith          Int?
+  evangelism     Int?
+  apostleship    Int?
+  serviceHelps   Int?
+  mercy          Int?
+  giving         Int?
+  hospitality    Int?
+
   answers Answer[]
+  Gift    Gift?    @relation(fields: [giftId], references: [id])
+  giftId  String?
 }
