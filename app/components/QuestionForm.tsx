@@ -1,5 +1,5 @@
 import { Form, useSubmit } from "@remix-run/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import QuestionOption from "./QuestionOption";
 
 type Question = {
@@ -20,50 +20,67 @@ export default function QuestionForm({ questions }: Props) {
     Record<string, boolean>
   >({});
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-
-    const data: Record<string, string> = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-
-    // Handle form submission, e.g., send data to the server or store it in state.
-    console.log("Form data:", data);
-
-    // Mark the answered question as true
-    const currentQuestionId = Object.keys(selectedOptions)[0];
-    if (currentQuestionId) {
-      setAnsweredQuestions((prevAnsweredQuestions) => ({
-        ...prevAnsweredQuestions,
-        [currentQuestionId]: true,
-      }));
-    }
-
-    // Reset the form after submission (optional)
-    event.currentTarget.reset();
-
-    // If you need to navigate after form submission, use `submit` function
-    // For example, to redirect to another page, use: `submit("/success")`
-  };
+  const formRef = useRef<HTMLFormElement>(null);
+  const questionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const handleRadioChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
+    const groupName = event.target.name;
     setSelectedOptions((prevSelectedOptions) => ({
       ...prevSelectedOptions,
-      [event.target.name]: event.target.value,
+      [groupName]: event.target.value,
     }));
+
+    // Find the index of the current question in the questions array
+    const currentQuestionIndex = questions.findIndex(
+      (question) => `question_${question.id}` === groupName
+    );
+
+    // Scroll to the next question
+    if (
+      currentQuestionIndex >= 0 &&
+      currentQuestionIndex < questions.length - 1
+    ) {
+      const nextQuestion = questions[currentQuestionIndex + 1];
+      const nextQuestionRef =
+        questionRefs.current[`question_${nextQuestion.id}`];
+      if (nextQuestionRef) {
+        nextQuestionRef.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
   };
 
-  // TODO: Remove this after done testing
   const setAllTo5 = () => {
     const updatedSelectedOptions: Record<string, string> = {};
     for (const question of questions) {
-      updatedSelectedOptions[`question_${question.id}`] = "5";
+      const groupName = `question_${question.id}`;
+      const selectedOption = "5";
+
+      updatedSelectedOptions[groupName] = selectedOption;
+
+      // Trigger the change event manually for each question set to 5
+      const event = new Event("change");
+      const radioInput = document.getElementById(
+        `question_${question.id}_${selectedOption}`
+      ) as HTMLInputElement;
+      if (radioInput) {
+        radioInput.checked = true;
+        radioInput.dispatchEvent(event);
+      }
     }
     setSelectedOptions(updatedSelectedOptions);
+
+    // Update the answeredQuestions state for all questions
+    const updatedAnsweredQuestions: Record<string, boolean> = {};
+    questions.forEach((question) => {
+      const groupName = `question_${question.id}`;
+      updatedAnsweredQuestions[groupName] = true;
+    });
+    setAnsweredQuestions(updatedAnsweredQuestions);
   };
 
   // Initialize answeredQuestions state for each question
@@ -81,7 +98,7 @@ export default function QuestionForm({ questions }: Props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="space-y-4 pt-2">
+    <Form className="space-y-4 pt-2" method="post" action="/">
       {/* TODO: Remove this after done testing */}
       <button
         type="button"
@@ -95,10 +112,12 @@ export default function QuestionForm({ questions }: Props) {
         const selectedOption = selectedOptions[groupName] || "";
         const isAnswered = checkIsAnswered(groupName);
 
-        console.log(isAnswered);
         return (
           <div
             key={question.id}
+            ref={(ref) => {
+              questionRefs.current[groupName] = ref;
+            }}
             className={`rounded-md border bg-white p-4 shadow-md transition-opacity duration-500 ${
               isAnswered ? "opacity-60" : "opacity-100"
             }`}

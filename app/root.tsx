@@ -11,7 +11,7 @@ import {
 } from "@remix-run/react";
 
 import { getUser } from "~/session.server";
-import { getQuestions } from '~/models/question.server';
+import { getQuestions } from "~/models/question.server";
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -19,14 +19,30 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
+export async function action({ request }) {
+  console.log("TEST");
+  const body = await request.formData();
+  console.log("Form data:", body);
+
+  const formData = {};
+  for (const entry of body.entries()) {
+    formData[entry[0]] = entry[1];
+  }
+  console.log("Parsed form data:", formData);
+
+  return {
+    redirect: "/results",
+  };
+}
+
 export const loader = async ({ request }: LoaderArgs) => {
   const questions = await getQuestions();
   const user = await getUser(request);
 
-  return json({ 
+  return json({
     questions,
     user,
-   });
+  });
 };
 
 export default function App() {
