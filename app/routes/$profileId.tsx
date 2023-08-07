@@ -5,7 +5,7 @@ import { json } from "@remix-run/node";
 import { getProfileByProfileId } from "~/models/profile.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
-  const { profileId } = params;
+  const { profileId } = params as { profileId: string };
 
   try {
     const profile = await getProfileByProfileId(profileId);
@@ -35,11 +35,12 @@ export default function Profile() {
     )
   );
 
-  const maxValue = Math.max(...Object.values(filteredProfile));
+  // Get the maximum value of the filteredProfile (cast the values to numbers)
+  const maxValue = Math.max(...Object.values(filteredProfile).map(Number));
 
   // Get the top three keys based on their values, sorted from largest to smallest
   const topThreeKeys = Object.entries(filteredProfile)
-    .sort(([keyA, valueA], [keyB, valueB]) => valueB - valueA)
+    .sort(([keyA, valueA], [keyB, valueB]) => Number(valueB) - Number(valueA))
     .slice(0, 3)
     .map(([key]) => key);
 
@@ -60,7 +61,10 @@ export default function Profile() {
         {/* Display other profile data here */}
         <div className="grid grid-cols-2 gap-4">
           {Object.entries(filteredProfile)
-            .sort(([keyA, valueA], [keyB, valueB]) => valueB - valueA) // Sort keys by value in descending order
+            .sort(
+              ([keyA, valueA], [keyB, valueB]) =>
+                Number(valueB) - Number(valueA)
+            )
             .map(([key, value]) => (
               <div
                 key={key}

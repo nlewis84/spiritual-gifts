@@ -11,6 +11,7 @@ import {
 } from "@remix-run/react";
 
 import { getUser } from "~/session.server";
+import type { Question } from "@prisma/client";
 import { getQuestions, getQuestionById } from "~/models/question.server";
 import {
   saveProfileDataToUser,
@@ -23,38 +24,48 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
+interface ExtendedQuestion extends Question {
+  gift: {
+    name: string;
+    // Add any other properties from the 'gift' object if needed
+  };
+}
+
 // Function to calculate gift totals from form data
-const calculateGiftTotals = async (formData) => {
-  const giftTotals = {};
+const calculateGiftTotals = async (formData: Record<string, string>) => {
+  const giftTotals: Record<string, number> = {};
 
   for (const [key, value] of Object.entries(formData)) {
     const questionId = key.replace("question_", "");
-    const questionData = await getQuestionById(questionId);
-    const answer = parseInt(value);
+    const questionData = (await getQuestionById(
+      questionId
+    )) as ExtendedQuestion | null;
 
-    if (questionData.gift) {
+    if (questionData?.gift) {
       const giftName = questionData.gift.name;
 
       // Convert gift name to camelCase
       const giftNameInCamelCase = giftName
         .toLowerCase()
-        .replace(/\/(.?)/g, (match, chr) => chr.toUpperCase());
+        .replace(/\/(.?)/g, (match: string, chr: string) => chr.toUpperCase());
 
+      // Update giftTotals
       giftTotals[giftNameInCamelCase] =
-        (giftTotals[giftNameInCamelCase] || 0) + answer;
+        (giftTotals[giftNameInCamelCase] || 0) + parseInt(value, 10);
     }
   }
 
   return giftTotals;
 };
 
-export async function action({ request }) {
+export async function action({ request }: { request: Request }) {
   const body = await request.formData();
   const user = await getUser(request);
 
-  const formData = {};
+  const formData: Record<string, string> = {};
+
   for (const entry of body.entries()) {
-    formData[entry[0]] = entry[1];
+    formData[entry[0]] = entry[1] as string;
   }
 
   const giftTotals = await calculateGiftTotals(formData);
@@ -66,8 +77,8 @@ export async function action({ request }) {
   } else {
     createdProfile = await saveProfileDataWithoutUser(giftTotals);
   }
-  console.log(createdProfile);
-  return redirect(`/${createdProfile.id}`);
+
+  return redirect(createdProfile ? `/${createdProfile.id}` : "/");
 }
 
 export const loader = async ({ request }: LoaderArgs) => {

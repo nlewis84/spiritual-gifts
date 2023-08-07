@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function saveProfileDataToUser(userId: string, giftId: string): Promise<void> {
+export async function saveProfileDataToUser(userId: string, giftId: any): Promise<void> {
   // Check if the gifts already exist in the database
   const gifts = [
     "Leadership",
