@@ -93,7 +93,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function App() {
   // Add Open Graph (OG) meta tags for social media sharing
-  const ogImageUrl = "https://imgur.com/3pJz84C"; // Replace with the URL of your image
+  const ogImageUrl =
+    "https://res.cloudinary.com/hwwbvfvlv/image/upload/v1691383333/2020-06-03_beowm6.jpg"; // Replace with the URL of your image
 
   return (
     <html lang="en" className="h-full">
