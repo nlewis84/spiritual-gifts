@@ -52,9 +52,21 @@ export default function Profile() {
     setTimeout(() => setCopied(false), 2000); // Remove "Copied!" message after 2 seconds
   };
 
+  // Function to handle the click event of the X button
+  const handleXButtonClick = () => {
+    // Replace '/' with the appropriate URL if needed
+    window.location.href = "/";
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-blue-900 to-blue-500 p-4">
-      <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-6 shadow-lg">
+      <button
+        onClick={handleXButtonClick}
+        className="absolute right-8 top-8 flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-800"
+      >
+        X
+      </button>
+      <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-4 shadow-lg">
         <h1 className="mb-4 text-center text-3xl font-bold text-blue-800 md:text-4xl">
           Results:
         </h1>
@@ -101,13 +113,15 @@ export default function Profile() {
               </div>
             ))}
         </div>
-        <div
-          className={`mt-2 text-right text-sm text-green-500 transition-opacity duration-200`}
-          style={{ opacity: copied ? 1 : 0 }}
-        >
-          Copied!
-        </div>
-        <div className="mt-4 grid grid-cols-1 gap-4">
+
+        <div className="relative mt-4 grid grid-cols-1 gap-4">
+          <div
+            className={`absolute top-[-20px] text-right text-sm text-green-500 transition-opacity duration-300 ${
+              copied ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Copied!
+          </div>
           <div className="w-full rounded-md bg-blue-600 px-6 py-3 font-bold text-white shadow-md hover:bg-blue-700">
             <button onClick={copyLinkToResults}>Copy Link to Results</button>
           </div>
