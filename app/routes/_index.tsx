@@ -1,14 +1,11 @@
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Link, useRouteLoaderData } from "@remix-run/react";
+import { useRouteLoaderData } from "@remix-run/react";
 import QuestionForm from "../components/QuestionForm";
-import { useOptionalUser } from "~/utils";
 
 export const meta: V2_MetaFunction = () => [{ title: "Spiritual Gifts" }];
 
 export default function Index() {
   const { questions } = useRouteLoaderData("root");
-
-  const user = useOptionalUser();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-gradient-to-b from-blue-900 to-blue-500 p-4">

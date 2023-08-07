@@ -35,11 +35,6 @@ export default function Profile() {
     )
   );
 
-  // Calculate the total gifts value and the maximum value for scaling
-  const totalGifts = Object.values(filteredProfile).reduce(
-    (sum, value) => sum + (typeof value === "number" ? value : 0),
-    0
-  );
   const maxValue = Math.max(...Object.values(filteredProfile));
 
   // Get the top three keys based on their values, sorted from largest to smallest
