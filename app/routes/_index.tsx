@@ -24,7 +24,7 @@ export default function Index() {
           God has bestowed upon you to serve others in His kingdom.
         </p>
         <div className="flex flex-col items-center">
-          {user ? (
+          {/* {user ? (
             <Link
               to="/logout"
               className="mb-4 w-full rounded-md bg-blue-600 px-6 py-3 font-bold text-white shadow-md hover:bg-blue-700 md:mb-0 md:w-auto"
@@ -46,7 +46,7 @@ export default function Index() {
                 Log In
               </Link>
             </>
-          )}
+          )} */}
         </div>
       </div>
       <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-6 shadow-md">

@@ -54,35 +54,6 @@ export default function QuestionForm({ questions }: Props) {
     }
   };
 
-  const setAllTo5 = () => {
-    const updatedSelectedOptions: Record<string, string> = {};
-    for (const question of questions) {
-      const groupName = `question_${question.id}`;
-      const selectedOption = "5";
-
-      updatedSelectedOptions[groupName] = selectedOption;
-
-      // Trigger the change event manually for each question set to 5
-      const event = new Event("change");
-      const radioInput = document.getElementById(
-        `question_${question.id}_${selectedOption}`
-      ) as HTMLInputElement;
-      if (radioInput) {
-        radioInput.checked = true;
-        radioInput.dispatchEvent(event);
-      }
-    }
-    setSelectedOptions(updatedSelectedOptions);
-
-    // Update the answeredQuestions state for all questions
-    const updatedAnsweredQuestions: Record<string, boolean> = {};
-    questions.forEach((question) => {
-      const groupName = `question_${question.id}`;
-      updatedAnsweredQuestions[groupName] = true;
-    });
-    setAnsweredQuestions(updatedAnsweredQuestions);
-  };
-
   // Initialize answeredQuestions state for each question
   useEffect(() => {
     const initialAnsweredQuestions: Record<string, boolean> = {};
@@ -99,14 +70,6 @@ export default function QuestionForm({ questions }: Props) {
 
   return (
     <Form className="space-y-4 pt-2" method="post" action="/">
-      {/* TODO: Remove this after done testing */}
-      <button
-        type="button"
-        className="w-full rounded-md bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-700"
-        onClick={setAllTo5}
-      >
-        Set All to 5
-      </button>
       {questions.map((question) => {
         const groupName = `question_${question.id}`;
         const selectedOption = selectedOptions[groupName] || "";
