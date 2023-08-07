@@ -122,12 +122,18 @@ export default function Profile() {
           >
             Copied!
           </div>
-          <div className="w-full rounded-md bg-blue-600 px-6 py-3 font-bold text-white shadow-md hover:bg-blue-700">
-            <button onClick={copyLinkToResults}>Copy Link to Results</button>
-          </div>
-          <div className="w-full rounded-md bg-blue-600 px-6 py-3 font-bold text-white shadow-md hover:bg-blue-700">
-            <Link to="/">Take the Test Again</Link>
-          </div>
+          <button
+            onClick={copyLinkToResults}
+            className="w-full rounded-md bg-blue-600 px-6 py-3 font-bold text-white shadow-md hover:bg-blue-700"
+          >
+            Copy Link to Results
+          </button>
+          <Link
+            className="w-full rounded-md bg-blue-600 px-6 py-3 text-center font-bold text-white shadow-md hover:bg-blue-700"
+            to="/"
+          >
+            Take the Test Again
+          </Link>
         </div>
       </div>
     </main>
