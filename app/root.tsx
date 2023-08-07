@@ -92,6 +92,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function App() {
+  // Add Open Graph (OG) meta tags for social media sharing
+  const ogImageUrl = "https://imgur.com/3pJz84C"; // Replace with the URL of your image
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -99,6 +102,14 @@ export default function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        {/* Open Graph (OG) meta tags */}
+        <meta property="og:title" content="Spiritual Gifts" />
+        <meta
+          property="og:description"
+          content="Spiritual Gifts is a tool to help you discover your spiritual gifts"
+        />
+        <meta property="og:image" content={ogImageUrl} />
+        {/* Add any other OG meta tags you want, e.g., og:url, og:type, etc. */}
       </head>
       <body className="h-full">
         <Outlet />
