@@ -60,13 +60,14 @@ export async function action({ request }) {
   const giftTotals = await calculateGiftTotals(formData);
   console.log("Gift totals:", giftTotals);
   // Save the profile data based on user login status
+  let createdProfile;
   if (user) {
-    await saveProfileDataToUser(user.id, giftTotals);
+    createdProfile = await saveProfileDataToUser(user.id, giftTotals);
   } else {
-    await saveProfileDataWithoutUser(giftTotals);
+    createdProfile = await saveProfileDataWithoutUser(giftTotals);
   }
-
-  return redirect("/results");
+  console.log(createdProfile);
+  return redirect(`/${createdProfile.id}`);
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
