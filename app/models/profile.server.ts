@@ -1,6 +1,12 @@
+import type { Profile } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
+interface ProfileData {
+  gift: { connect: { id: string } };
+  user: { connect: { id: string } };
+}
 
 export async function saveProfileDataToUser(userId: string, giftId: any): Promise<void> {
   // Check if the gifts already exist in the database
@@ -50,14 +56,15 @@ export async function saveProfileDataToUser(userId: string, giftId: any): Promis
   const updatedGifts = await Promise.all(giftUpdates);
 
   // Create the profile with the updated gifts
+  const profileData: ProfileData = {
+    gift: { connect: { id: updatedGifts[0].id } },
+    user: { connect: { id: userId } },
+  };
+
   await prisma.profile.create({
-    data: {
-      giftId: updatedGifts[0].id,
-      userId,
-    },
+    data: profileData,
   });
 }
-
 
 
 export async function saveProfileDataWithoutUser(giftTotals: any) {
@@ -107,7 +114,7 @@ export async function saveProfileDataWithoutUser(giftTotals: any) {
   return createdProfile;
 }
 
-export async function getProfileByProfileId(profileId: string): Promise<Profile> {
+export async function getProfileByProfileId(profileId: string): Promise<Profile | null> {
   const profile = await prisma.profile.findUnique({
     where: { id: profileId },
   });
