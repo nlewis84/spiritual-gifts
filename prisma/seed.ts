@@ -1,14 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
+const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcryptjs");
 
 const prisma = new PrismaClient();
 
 // Array of questions with their text and question number
-const questions: {
-  text: string;
-  questionNumber: number;
-  gift: string;
-}[] = [
+const questions = [
   { text: "I have the ability to organize ideas, resources, time, and people effectively.", questionNumber: 1, gift: "Administration" },
   { text: "I am willing to study and prepare for the task of teaching.", questionNumber: 2, gift: "Teaching" },
   { text: "I am able to relate the truths of God to specific situations.", questionNumber: 3, gift: "Wisdom" },
