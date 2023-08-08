@@ -81,7 +81,7 @@ export default function QuestionForm({ questions }: Props) {
             ref={(ref) => {
               questionRefs.current[groupName] = ref;
             }}
-            className={`rounded-md border bg-white p-4 shadow-md transition-opacity duration-500 ${
+            className={`max-w-md rounded-md border bg-white p-4 shadow-md transition-opacity duration-500 ${
               isAnswered ? "opacity-60" : "opacity-100"
             }`}
           >
