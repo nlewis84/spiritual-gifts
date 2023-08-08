@@ -86,7 +86,7 @@ export default function QuestionForm({ questions }: Props) {
             }`}
           >
             <p className="mb-1 text-xl font-semibold">{question.text}</p>
-            <div className="flex space-x-2">
+            <div className="flex justify-around">
               {[1, 2, 3, 4, 5].map((optionValue) => (
                 <QuestionOption
                   key={`question_${question.id}_${optionValue}`}
