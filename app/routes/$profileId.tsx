@@ -59,7 +59,7 @@ export default function Profile() {
   };
 
   return (
-    <main className="flex overflow-hidden max-h-screen min-h-screen flex-col items-center justify-start md:justify-center gap-4 bg-gradient-to-b from-blue-900 to-blue-500 p-4 md:max-h-full">
+    <main className="flex overflow-hidden max-h-[calc(100dvh)] min-h-screen flex-col items-center justify-start md:justify-center gap-4 bg-gradient-to-b from-blue-900 to-blue-500 p-4 md:max-h-full">
       <button
         onClick={handleXButtonClick}
         className="absolute right-8 top-8 hidden h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-800 sm:flex"
