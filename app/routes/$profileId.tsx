@@ -66,7 +66,7 @@ export default function Profile() {
       >
         X
       </button>
-      <div className="relative w-full max-w-md space-y-4 rounded-lg bg-white p-4 shadow-lg">
+      <div className="relative w-full max-w-md rounded-lg bg-white p-4 shadow-lg">
         <button
           onClick={handleXButtonClick}
           className="absolute right-4 flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-800 sm:hidden"
