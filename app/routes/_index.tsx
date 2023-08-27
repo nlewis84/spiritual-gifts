@@ -8,7 +8,7 @@ export default function Index() {
   const { questions } = useRouteLoaderData("root");
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-gradient-to-b from-blue-900 to-blue-500 p-4">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-gradient-to-b from-blue-900 to-blue-500 p-4 pb-48">
       <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-6 shadow-md">
         <h1 className="mb-4 text-center text-3xl font-bold text-blue-800 md:text-4xl">
           Spiritual Gifts
